@@ -1,5 +1,22 @@
 # Decidr
 
+## Installation
+
+Launch the app locally by cloning the repository and running 
+``
+mix phx.server
+``
+
+To run automated tests, use:
+``
+mix test
+``
+
+To reset the database (drop and re-run migrations) run:
+``
+MIX_ENV=dev mix ecto.reset
+``
+
 ## Requirements
 
 PART 1
@@ -16,7 +33,7 @@ validated except for last_name, weapon and vehicle which are optional.
 
 PART 2
 - [x] As a user, I should be able to view these results from the importer in a table.
-- [] As a user, I should be able to paginate through the results so that I can see a maximum
+- [x] As a user, I should be able to paginate through the results so that I can see a maximum
 of 10 results at a time.
-- [] As a user, I want to type in a search box so that I can filter the results I want to see.
-- [] As a user, I want to be able to click on a table column heading to reorder the visible results.
+- [x] As a user, I want to type in a search box so that I can filter the results I want to see.
+- [x] As a user, I want to be able to click on a table column heading to reorder the visible results.

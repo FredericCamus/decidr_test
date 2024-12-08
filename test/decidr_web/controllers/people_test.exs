@@ -36,12 +36,6 @@ defmodule Decidr.PeopleTest do
     test_person1 = Repo.get!(People, person1.id) |> Repo.preload(:locations)
     test_person2 = Repo.get!(People, person2.id) |> Repo.preload(:locations)
 
-    query = from u in People, select: u
-    Repo.all(query)
-    |> Enum.map(& Repo.preload(&1, :locations))
-    |> Enum.map(& Repo.preload(&1, :affiliations))
-    |> dbg
-
     assert test_location1.people |> Enum.at(0) |> Map.get(:first_name) == "Bob"
     assert test_location2.people |> Enum.at(1) |> Map.get(:first_name) == "Belisarius"
 
