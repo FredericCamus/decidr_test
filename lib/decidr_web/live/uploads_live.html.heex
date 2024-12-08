@@ -1,0 +1,121 @@
+<h1 class="text-4xl font-bold text-gray-800 my-4">Importer</h1>
+
+<div class="drop-zone flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 text-gray-500" phx-drop-target={@uploads.user_file.ref}>
+  <form id="upload-form" phx-submit="save" phx-change="validate">
+    <.live_file_input upload={@uploads.user_file} />
+  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Upload
+  </button>
+</form>
+</div>
+
+<section phx-drop-target={@uploads.user_file.ref}>
+    <%!-- render each user_file entry --%>
+    <article :for={entry <- @uploads.user_file.entries} class="upload-entry">
+      <figure>
+        <.live_img_preview entry={entry} />
+        <figcaption>{entry.client_name}</figcaption>
+      </figure>
+  
+      <%!-- entry.progress will update automatically for in-flight entries --%>
+      <progress value={entry.progress} max="100"> {entry.progress}% </progress>
+  
+      <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
+      <button type="button" phx-click="cancel-upload" phx-value-ref={entry.ref} aria-label="cancel">&times;</button>
+  
+      <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
+      <p :for={err <- upload_errors(@uploads.user_file, entry)} class="alert alert-danger">{error_to_string(err)}</p>
+    </article>
+  
+    <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
+    <p :for={err <- upload_errors(@uploads.user_file)} class="alert alert-danger">
+      {error_to_string(err)}
+    </p>
+</section>
+
+<h1 class="text-4xl font-bold text-gray-800 my-4">Viewer</h1>
+
+<h2 class="text-2xl font-bold text-red-800 my-4">People Relation: Page {round(@offset/@limit)+1}</h2>
+
+<form class="max-w-md mx-auto" phx-submit="update_search" >   
+  <div class="relative">
+      <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+      </div>
+      <input type="search" name="search" phx-change="update_search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search People Relation..." required />
+  </div>
+</form>
+
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
+  <tr>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="id">ID</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="first_name">First Name</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="last_name">Last Name</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="locations_id">Locations</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="species">Species</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="gender">Gender</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="affiliations_id">Affiliations</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="weapon">Weapon</button></th>
+    <th scope="col" class="px-6 py-3"><button phx-click="order_people" phx-value-id="vehicle">Vehicle</button></th>
+  </tr>
+</thead>
+<tbody>
+  <tr :for={p <- @people}>
+    <td>{p.id}</td>
+    <td>{p.first_name}</td>
+    <td>{optional_attribute(p.last_name)}</td>
+    <td>{Enum.map(p.locations, & &1.name) |> Enum.join(", ")}</td>
+    <td>{p.species}</td>
+    <td>{p.gender}</td>
+    <td>{Enum.map(p.affiliations, & &1.name) |> Enum.join(", ")}</td>
+    <td>{optional_attribute(p.weapon)}</td>
+    <td>{optional_attribute(p.vehicle)}</td>
+  </tr>
+</tbody>
+</table>
+
+<div class='flex items-center justify-center'>
+  <button class={get_class("nav_button")} phx-click="paginate" phx-value-offset={@offset - @limit}>PREV</button>
+  <button class={get_class("nav_button")} phx-click="paginate" phx-value-offset={@offset + @limit}>NEXT</button>
+  </div>
+  
+<h2 class="text-2xl font-bold text-red-800 my-4">Locations Relation</h2>
+
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>People</th>
+  </tr>
+</thead>
+<tbody>
+  <tr :for={p <- @locations}>
+    <td>{p.id}</td>
+    <td>{p.name}</td>
+    <td>{Enum.map(p.people, & &1.first_name) |> Enum.join(", ")}</td>
+  </tr>
+</tbody>
+</table>
+
+<h2 class="text-2xl font-bold text-red-800 my-4">Affiliations Relation</h2>
+
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-400">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>People</th>
+  </tr>
+</thead>
+<tbody>
+  <tr :for={p <- @affiliations}>
+    <td>{p.id}</td>
+    <td>{p.name}</td>
+    <td>{Enum.map(p.people, & &1.first_name) |> Enum.join(", ")}</td>
+  </tr>
+</tbody>
+</table>
