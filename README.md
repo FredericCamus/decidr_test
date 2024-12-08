@@ -1,18 +1,26 @@
 # Decidr
 
+## Requirements
+
+Ensure compatible version of [Elixir](https://elixir-lang.org/install.html) and [Phoenix](https://hexdocs.pm/phoenix/installation.html#elixir-1-14-or-later) are installed. 
+
 ## Installation
 
-Launch the app locally by cloning the repository and running 
-``
+Launch the app locally by running the following:
+```
+git clone git@github.com:FredericCamus/decidr_test.git
+cd decidr_test
+mix deps.get
 mix phx.server
-``
+```
+Then the app should be accessible from http://localhost:4000. 
 
 To run automated tests, use:
 ``
 mix test
 ``
 
-To reset the database (drop and re-run migrations) run:
+To reset the database (drop and re-run migrations), use:
 ``
 MIX_ENV=dev mix ecto.reset
 ``
