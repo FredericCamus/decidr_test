@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Ensure compatible version of [Elixir](https://elixir-lang.org/install.html) and [Phoenix](https://hexdocs.pm/phoenix/installation.html#elixir-1-14-or-later) are installed. 
+Ensure compatible versions of [Elixir](https://elixir-lang.org/install.html) and [Phoenix](https://hexdocs.pm/phoenix/installation.html#elixir-1-14-or-later) are installed. 
 
 This app uses the [Ecto](https://hexdocs.pm/ecto/getting-started.html) database wrapper to interact with a PostgreSQL server. Your PostgreSQL database may be setup to:
 
