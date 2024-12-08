@@ -4,6 +4,11 @@
 
 Ensure compatible version of [Elixir](https://elixir-lang.org/install.html) and [Phoenix](https://hexdocs.pm/phoenix/installation.html#elixir-1-14-or-later) are installed. 
 
+This app uses the [Ecto](https://hexdocs.pm/ecto/getting-started.html) database wrapper to interact with a PostgreSQL server. Your PostgreSQL database may be setup to:
+
+- not require a username and password. If the above configuration doesn't work, try removing the username and password fields, or setting them both to "postgres", in the [dev.ex](config/dev.exs) file.
+- be running on a non-standard port. The default port is 5432. You can specify your specific port by adding it to the config: e.g. port: 15432.
+
 ## Installation
 
 Launch the app locally by running the following:
