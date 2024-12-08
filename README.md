@@ -1,4 +1,4 @@
-# Decidr
+# Decidr Test App
 
 ## Requirements
 
